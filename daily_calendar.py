@@ -18,7 +18,7 @@
 import sqlite3
 
 try:
-  connection = sqlite3.connect("C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/dsmarket.db")
+  connection = sqlite3.connect("D:\Trabajo 07062019\Personal\España\Master Data Science\TFM\capstone-project-2\capstone-project-r2\data\dsmarket.db")
   print('Conexión establecida')
 except:
   print('Error al intentar la conexión')
@@ -31,7 +31,7 @@ except:
 import pandas as pd
 #importación ficheros
 columna_tipos = {'date': 'str', 'weekday': 'str', 'weekday_int': 'int', 'd': 'str', 'event': 'str'}
-calendario = pd.read_csv("C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/daily_calendar_with_events.csv", dtype=columna_tipos)
+calendario = pd.read_csv("D:\Trabajo 07062019\Personal\España\Master Data Science\TFM\capstone-project-2\capstone-project-r2\data\daily_calendar_with_events.csv", dtype=columna_tipos)
 
 #miramos duplicados
 print(calendario.isnull().sum())

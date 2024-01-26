@@ -2,7 +2,7 @@
 import sqlite3
 
 try:
-  connection = sqlite3.connect("C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/dsmarket.db")
+  connection = sqlite3.connect("D:\Trabajo 07062019\Personal\España\Master Data Science\TFM\capstone-project-2\capstone-project-r2\data\dsmarket.db")
   print('Conexión establecida')
 except:
   print('Error al intentar la conexión')
@@ -11,7 +11,7 @@ import pandas as pd
 #importación ficheros
 #calendario = pd.read_csv("C:/capstone/daily_calendar_with_events.csv")
 #precios = pd.read_csv("C:/capstone/item_prices.csv")
-ventas = pd.read_csv("C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/item_sales.csv")
+ventas = pd.read_csv("D:\Trabajo 07062019\Personal\España\Master Data Science\TFM\capstone-project-2\capstone-project-r2\data\item_sales.csv")
 #ordernamos el dataframe por item (no por id)
 ventas = ventas.sort_values(by='item', ascending=True)
 
