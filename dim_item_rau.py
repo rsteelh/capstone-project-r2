@@ -12,6 +12,7 @@ except:
 query = "SELECT distinct item FROM item_prices ORDER BY item"
 items = pd.read_sql_query(query,connection)
 items = items.reset_index(drop=False)
+items = items.rename(columns={'index':'id_item'})
 
 items.to_sql(name='DIM_ITEMS', con=connection, if_exists='replace', index=False)
 connection.commit()
