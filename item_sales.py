@@ -1,5 +1,6 @@
 #conexión base de datos SQL Lite
 import sqlite3
+import pandas as pd
 
 ruta_db = "C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/dsmarket.db"
 ruta_csv = "C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/item_sales.csv"
@@ -10,7 +11,6 @@ try:
 except:
   print('Error al intentar la conexión')
 
-import pandas as pd
 #importación ficheros
 #calendario = pd.read_csv("C:/capstone/daily_calendar_with_events.csv")
 #precios = pd.read_csv("C:/capstone/item_prices.csv")
