@@ -1,8 +1,11 @@
 #conexión base de datos SQL Lite
 import sqlite3
 
+ruta_db = "C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/dsmarket.db"
+ruta_csv = "C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/item_prices.csv"
+
 try:
-  connection = sqlite3.connect("C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/dsmarket.db")
+  connection = sqlite3.connect(ruta_db)
   print('Conexión establecida')
 except:
   print('Error al intentar la conexión')
@@ -15,7 +18,7 @@ except:
 import pandas as pd
 #importación ficheros
 columna_tipos = {'item': 'str', 'category': 'str', 'store_code': 'str', 'yearweek': 'str', 'sell_price': 'float'}
-precios = pd.read_csv("C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/item_prices.csv", dtype=columna_tipos)
+precios = pd.read_csv(ruta_csv, dtype=columna_tipos)
 
 #Exploración y limpieza
 #miramos duplicados

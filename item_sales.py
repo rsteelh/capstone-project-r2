@@ -1,8 +1,11 @@
 #conexión base de datos SQL Lite
 import sqlite3
 
+ruta_db = "C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/dsmarket.db"
+ruta_csv = "C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/item_sales.csv"
+
 try:
-  connection = sqlite3.connect("C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/dsmarket.db")
+  connection = sqlite3.connect(ruta_db)
   print('Conexión establecida')
 except:
   print('Error al intentar la conexión')
@@ -11,7 +14,7 @@ import pandas as pd
 #importación ficheros
 #calendario = pd.read_csv("C:/capstone/daily_calendar_with_events.csv")
 #precios = pd.read_csv("C:/capstone/item_prices.csv")
-ventas = pd.read_csv("C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/item_sales.csv")
+ventas = pd.read_csv(ruta_csv)
 #ordernamos el dataframe por item (no por id)
 ventas = ventas.sort_values(by='item', ascending=True)
 
