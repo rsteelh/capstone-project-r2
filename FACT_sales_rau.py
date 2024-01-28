@@ -20,7 +20,6 @@ fechas['date'] = pd.to_datetime(fechas['date'], format='%Y-%m-%d')
 fechas = fechas.drop('date', axis=1)
 result = pd.merge(sales, items, on='item', how='inner')
 result2 = pd.merge(result, fechas, on='d', how='inner')
-result2['total'] = result2['sales']*result2['sell_price']
 result2 = result2.drop('d', axis=1)
 del result
 
@@ -38,6 +37,7 @@ result4 = result4.drop('item', axis=1)
 result4 = result4.drop('yearweek', axis=1)
 result4 = result4.drop('category', axis=1)
 result4 = result4.reset_index(drop=False)
+result4['total'] = result4['sales']*result4['sell_price']
 result4 = result4.rename(columns={'index':'id_sale'})
 
 
