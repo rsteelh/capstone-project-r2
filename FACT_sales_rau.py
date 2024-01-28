@@ -16,10 +16,12 @@ items = pd.read_sql_query(query,connection)
 query = "SELECT d, date, yearweek FROM daily_calendar"
 fechas = pd.read_sql_query(query,connection)
 #creamos un campo de tipo fecha
-fechas['fecha'] = pd.to_datetime(fechas['date'], format='%Y-%m-%d')
+fechas['date'] = pd.to_datetime(fechas['date'], format='%Y-%m-%d')
 fechas = fechas.drop('date', axis=1)
 result = pd.merge(sales, items, on='item', how='inner')
 result2 = pd.merge(result, fechas, on='d', how='inner')
+result2['total'] = result2['sales']*result2['sell_price']
+result2 = result2.drop('d', axis=1)
 del result
 
 query = "SELECT * FROM DIM_STORES"
@@ -32,16 +34,17 @@ query = "SELECT * FROM item_prices"
 prices = pd.read_sql_query(query,connection)
 result4 = pd.merge(result3,prices, left_on=['yearweek','store_code','item'], right_on=['yearweek','store_code','item'], how='inner')
 result4 = result4.drop('store_code', axis=1)
-result4 = result4.drop('d', axis=1)
 result4 = result4.drop('item', axis=1)
 result4 = result4.drop('yearweek', axis=1)
+result4 = result4.drop('category', axis=1)
+result4 = result4.reset_index(drop=False)
+result4 = result4.rename(columns={'index':'id_sale'})
 
-
-print(result4)
 
 result4.to_sql(name='FACT_SALES', con=connection, if_exists='replace', index=False)
-del result4
 connection.commit()
+
+del result4
 
 connection.close()
 print('Desconexión')
