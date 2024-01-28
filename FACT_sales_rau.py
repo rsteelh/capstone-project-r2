@@ -38,6 +38,7 @@ result4 = pd.merge(result3,prices, left_on=['yearweek','store_code','item'], rig
 del prices
 col_to_drop = ['item','yearweek','category','store_code']
 result4 = result4.drop(col_to_drop, axis=1)
+
 result4 = result4.reset_index(drop=False)
 result4['total'] = result4['sales']*result4['sell_price']
 result4 = result4.rename(columns={'index':'id_sale'})
