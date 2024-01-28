@@ -16,9 +16,10 @@
 
 #conexión base de datos SQL Lite
 import sqlite3
+import pandas as pd
 
-ruta_db = "C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/dsmarket.db"
-ruta_csv = "C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/daily_calendar_with_events.csv"
+ruta_db = "E:/projects_ds/dsmarket/data/dsmarket.db"
+ruta_csv = "E:/projects_ds/dsmarket/data/daily_calendar_with_events.csv"
 
 try:
   connection = sqlite3.connect(ruta_db)
@@ -31,7 +32,7 @@ try:
 except:
    print("la tabla no existe")
 
-import pandas as pd
+
 #importación ficheros
 columna_tipos = {'date': 'str', 'weekday': 'str', 'weekday_int': 'int', 'd': 'str', 'event': 'str'}
 calendario = pd.read_csv(ruta_csv, dtype=columna_tipos)
