@@ -12,6 +12,7 @@ except:
 query = "SELECT * FROM daily_calendar"
 date = pd.read_sql_query(query,connection)
 date['id_date'] = pd.to_datetime(date['date'], format='%Y-%m-%d')
+date['year'] = (date['id_date'].dt.strftime('%Y'))
 date = date.drop('date', axis=1)
 date = date.drop('d', axis=1)
 

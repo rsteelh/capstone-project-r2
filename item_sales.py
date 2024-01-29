@@ -20,7 +20,7 @@ ventas = ventas.sort_values(by='item', ascending=True)
 
 #Exploración y limpieza
 #miramos duplicados
-print(ventas[ventas.duplicated(keep=False)])
+ventas[ventas.duplicated(keep=False)]
 #no existen, tratamos nulos
 item = ventas['item'].isnull().any()
 store_code = ventas['store_code'].isnull().any()
@@ -28,29 +28,25 @@ if item == True | store_code == True:
   print("Tratar nulos")
 
 #miramos los datos ya cargados
-q = """
-SELECT DISTINCT(item)
-FROM item_sales
-ORDER BY 1
-"""
+q = """ SELECT DISTINCT(item) FROM item_sales ORDER BY 1 """
 try:
   #creamos lista de items ya cargados para no tener que repetir la carga si esta se interrumpe y seguir por el sitio que acabó
   productos_cargados = pd.read_sql_query(q, connection)
   #miramos cual es el último que hay en la lista ordenada alfabéticamente
   ult_producto = productos_cargados.tail(1)['item'].values[0]
-  #borramos el último por si el bucle se quedó a medias
-  productos_cargados2 = productos_cargados[:len(productos_cargados)-1]
   # Borramos de la base de datos el último valor para no duplicarlo:
+  qd = f"DELETE FROM item_sales WHERE item='{ult_producto}'"
   cursor = connection.cursor()
-  q = f"DELETE FROM item_sales WHERE item='{ult_producto}'"
-  filas_borradas = cursor.execute(q).rowcount
-  print(f"Borradas {filas_borradas} filas del último producto {ult_producto}")
+  filas_borradas = cursor.execute(qd).rowcount
   connection.commit;
+  print(f"Borradas {filas_borradas} filas del último producto {ult_producto}")
+  cursor.close()
+  #recalculamos productos borradows despues del borrado, en teoria los productos cargados menos 1
+  productos_cargados_dp = productos_cargados[:len(productos_cargados)-1]
 except:
   #capturamos el error si la tabla no existe e inicializamos los df con 0 filas
   columna=['item']
-  productos_cargados = pd.DataFrame(columns=columna)
-  productos_cargados2 = pd.DataFrame(columns=columna)
+  productos_cargados_dp = pd.DataFrame(columns=columna)
 
 #creación de df
 #ventas2 = pd.DataFrame(columns=ventas.columns[:7].tolist())
@@ -63,23 +59,23 @@ ventas2['sales'] = ventas2['sales'].astype('int8')
 #ventas2[["Dia", "Ventas"]] = None
 
 #dias del df
-dias = ventas.columns[7:].tolist()
-max_dies = len(dias)
+dies = len(ventas.columns[7:].tolist())
 #productos diferentes
-lista_productos = ventas['id'].unique()
-max_productos = len(lista_productos) - len(productos_cargados2)
+productos = ventas['item'].unique()
+max_ventas = len(ventas)
 x = 0
 tabla_existe=0
 
-for i in range(max_productos):
+#bucle de ventas
+for i in range(max_ventas):
   item_actual = ventas.iloc[i, 1]
   #miramos si la fila con el producto actual ventas.iloc[i, 1] ya ha sido cargado
-  cargado = productos_cargados2[productos_cargados2['item'] == ventas.iloc[i, 1]]
+  cargado = productos_cargados_dp[productos_cargados_dp['item'] == item_actual]
   #si la fila está vacia quiere decir que no esta ya cargada y empezamos el bucle de carga
   if cargado.empty == True:
-    for j in range(max_dies):
+    for j in range(dies):
       #no cargamos las ventas 0
-      if (ventas.iloc[i, 7 + j] != 0 | ventas.iloc[i, 7 + j] == null):
+      if (ventas.iloc[i, 7 + j] != 0):
         ventas2.loc[x] = [ventas.iloc[i, 1], ventas.iloc[i, 5], ventas.columns[7+j], ventas.iloc[i, 7+j]]
       x += 1
     # Verificamos si tenemos que crear la tabla o la tenemos ya lista para seguri añadiendo filas
@@ -88,7 +84,7 @@ for i in range(max_productos):
       ventas2.drop(ventas2.index, inplace=True)
       x = 0
       tabla_existe = 1
-      print("producto cargado:",ventas.iloc[i, 1], "tienda: ", ventas.iloc[i, 5])
+      print("producto cargado:", ventas.iloc[i, 1], "tienda: ", ventas.iloc[i, 5])
       connection.commit()
     else:
       ventas2.to_sql(name='item_sales', con=connection, if_exists='append', index=False)
