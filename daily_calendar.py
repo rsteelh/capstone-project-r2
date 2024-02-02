@@ -18,8 +18,8 @@
 import sqlite3
 import pandas as pd
 
-ruta_db = "E:/projects_ds/dsmarket/data/dsmarket.db"
-ruta_csv = "E:/projects_ds/dsmarket/data/daily_calendar_with_events.csv"
+ruta_db = "C:/Users/rsalcedo/OneDrive - Generalitat de Catalunya/projects_ds/dsmarket/dsmarket1/data/dsmarket.db"
+ruta_csv = "C:/Users/rsalcedo/OneDrive - Generalitat de Catalunya/projects_ds/dsmarket/dsmarket1/data/daily_calendar_with_events.csv"
 
 try:
   connection = sqlite3.connect(ruta_db)
@@ -47,9 +47,14 @@ weekday_int = calendario['weekday_int'].isnull().any()
 d = calendario['d'].isnull().any()
 #no hay nulos, solo en events
 
-calendario['yearweek'] = calendario['date'].str.slice(0, 4) + calendario['date'].str.slice(5, 7)
+calendario[('date')] = pd.to_datetime(calendario['date'])
 
-calendario['date'] = pd.to_datetime(calendario['date']).apply(lambda x: x.strftime('%Y-%m-%d'))
+calendario['week'] = calendario['date'].dt.isocalendar().week.astype(str)
+for i in range(len(calendario)):
+    if int(calendario.loc[i,'week']) < 10:
+        calendario.loc[i,'week'] = '0'+calendario.loc[i,'week']
+calendario['year'] = calendario['date'].dt.isocalendar().year
+calendario['yearweek']=calendario['year'].astype(str)+calendario['week']
 
 #creación de df
 calendario.to_sql(name='daily_calendar', con=connection, if_exists='replace', index=False)
