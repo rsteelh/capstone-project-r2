@@ -1,6 +1,7 @@
 #conexión base de datos SQL Lite
 import sqlite3
 import pandas as pd
+import sys
 
 ruta_db = "C:/Users/rsalcedo/OneDrive - Generalitat de Catalunya/projects_ds/dsmarket/dsmarket1/data/dsmarket.db"
 ruta_csv = "C:/Users/rsalcedo/OneDrive - Generalitat de Catalunya/projects_ds/dsmarket/dsmarket1/data/item_sales.csv"
@@ -12,20 +13,60 @@ except:
   print('Error al intentar la conexión')
 
 #importación ficheros
-#calendario = pd.read_csv("C:/capstone/daily_calendar_with_events.csv")
-#precios = pd.read_csv("C:/capstone/item_prices.csv")
+ventas = pd.read_csv(ruta_csv)
+
+#normalización dataframe
+ventas_con_ceros=ventas.melt(id_vars=['id', 'item', 'category', 'department','store', 'store_code', 'region'], var_name='d',value_name='sales')
+del ventas
+
+
+#Exploración y limpieza
+#borrado de ventas con valor 0
+indices_eliminar=ventas_con_ceros[ventas_con_ceros['sales'] == 0].index
+ventas = ventas_con_ceros.drop(indices_eliminar)
+del ventas_con_ceros
+
+#miramos duplicados
+duplicados = ventas[ventas.duplicated(keep=False)]
+if len(duplicados) != 0 :
+  print("Tratar duplicados")
+
+#tratamos nulos
+item = ventas['item'].isnull().any()
+store_code = ventas['store_code'].isnull().any()
+if item == True | store_code == True:
+  print("Tratar nulos")
+
+#volcamos dataframe en la base de datos
+ventas.reset_index(drop=True, inplace=True)
+ventas.to_sql(name='item_sales', con=connection, if_exists='replace', index=False)
+del ventas
+connection.close()
+print('Desconexión')
+sys.exit()
+
+
+
+
+
+'''
+#HACIENDOLO CON BUCLES FOR
 ventas = pd.read_csv(ruta_csv)
 #ordernamos el dataframe por item (no por id)
 ventas = ventas.sort_values(by='item', ascending=True)
 
 #Exploración y limpieza
 #miramos duplicados
-ventas[ventas.duplicated(keep=False)]
-#no existen, tratamos nulos
+duplicados = ventas[ventas.duplicated(keep=False)]
+if len(duplicados) != 0 :
+  print("Tratar duplicados")
+
+#tratamos nulos
 item = ventas['item'].isnull().any()
 store_code = ventas['store_code'].isnull().any()
 if item == True | store_code == True:
   print("Tratar nulos")
+
 
 #miramos los datos ya cargados
 q = """ SELECT DISTINCT(item) FROM item_sales ORDER BY 1 """
@@ -80,8 +121,8 @@ for i in range(max_ventas):
       x += 1
     # Verificamos si tenemos que crear la tabla o la tenemos ya lista para seguri añadiendo filas
     if len(productos_cargados) == 0 and tabla_existe == 0:
-      ventas2.to_sql(name='item_sales', con=connection, if_exists='replace', index=False)
       ventas2.drop(ventas2.index, inplace=True)
+      ventas2.to_sql(name='item_sales', con=connection, if_exists='replace', index=False)
       x = 0
       tabla_existe = 1
       print("producto cargado:", ventas.iloc[i, 1], "tienda: ", ventas.iloc[i, 5])
@@ -95,3 +136,4 @@ for i in range(max_ventas):
 
 connection.close()
 print('Desconexión')
+'''
