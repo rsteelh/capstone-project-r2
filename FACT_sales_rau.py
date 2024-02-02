@@ -1,7 +1,7 @@
 import sqlite3
 import pandas as pd
 
-ruta_db = "C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/dsmarket.db"
+ruta_db = "C:/Users/rsalcedo/OneDrive - Generalitat de Catalunya/projects_ds/dsmarket/dsmarket1/data/dsmarket.db"
 
 try:
   connection = sqlite3.connect(ruta_db)
@@ -19,7 +19,7 @@ print("Primera etapa")
 
 query = "SELECT d, date, yearweek FROM daily_calendar"
 fechas = pd.read_sql_query(query,connection)
-fechas['id_date'] = pd.to_datetime(fechas['date'], format='%Y-%m-%d')
+fechas['id_date'] = fechas['date']
 result2 = pd.merge(result, fechas, on='d', how='inner')
 del result
 del fechas
