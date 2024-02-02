@@ -2,7 +2,7 @@
 import sqlite3
 
 try:
-  connection = sqlite3.connect("C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/dsmarket.db")
+  connection = sqlite3.connect("C:\RS\España\Master Data Science\TFM\capstone-project-2\capstone-project-r2\capstone-project-r2\data\dsmarket.db")
   print('Conexión establecida')
 except:
   print('Error al intentar la conexión')
@@ -11,7 +11,7 @@ import pandas as pd
 #importación ficheros
 #calendario = pd.read_csv("C:/capstone/daily_calendar_with_events.csv")
 #precios = pd.read_csv("C:/capstone/item_prices.csv")
-ventas = pd.read_csv("C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/item_sales.csv")
+ventas = pd.read_csv("C:\RS\España\Master Data Science\TFM\capstone-project-2\capstone-project-r2\capstone-project-r2\data\item_sales.csv")
 #ordernamos el dataframe por item (no por id)
 ventas = ventas.sort_values(by='item', ascending=True)
 
@@ -76,7 +76,7 @@ for i in range(max_productos):
   if cargado.empty == True:
     for j in range(max_dies):
       #no cargamos las ventas 0
-      if (ventas.iloc[i, 7 + j] != 0 | ventas.iloc[i, 7 + j] == null):
+      if (ventas.iloc[i, 7 + j] != 0 | ventas.iloc[i, 7 + j] == None):
         ventas2.loc[x] = [ventas.iloc[i, 1], ventas.iloc[i, 5], ventas.columns[7+j], ventas.iloc[i, 7+j]]
       x += 1
     # Verificamos si tenemos que crear la tabla o la tenemos ya lista para seguri añadiendo filas
