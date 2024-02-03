@@ -14,10 +14,6 @@ stores = pd.read_sql_query(query,connection)
 stores = stores.reset_index(drop=False)
 stores = stores.rename(columns={'index':'id_store'})
 
-#query = "SELECT distinct store_code, substr(store_code,0,4) city FROM item_prices ORDER BY store_code"
-#stores_cities = pd.read_sql_query(query,connection)
-#result = pd.merge(stores, stores_cities, on='store_code', how='inner')
-
 query = "SELECT id_city, city_code FROM DIM_CITIES"
 cities = pd.read_sql_query(query,connection)
 result = pd.merge(stores, cities, on='city_code', how='inner')
