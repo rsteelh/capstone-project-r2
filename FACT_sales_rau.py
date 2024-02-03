@@ -28,7 +28,7 @@ col_to_drop = ['d','date']
 result2 = result2.drop(col_to_drop, axis=1)
 print("Segunda etapa fechas")
 
-query = "SELECT id_store, store_code FROM DIM_STORES"
+query = "SELECT id_store, store_code, id_city FROM DIM_STORES"
 stores = pd.read_sql_query(query,connection)
 result3 = pd.merge(result2, stores, on='store_code', how='inner')
 del stores
@@ -43,22 +43,30 @@ del result3
 result4 = result4.drop('department', axis=1)
 print("Cuarta etapa departamentos")
 
+query = "SELECT id_category, category FROM DIM_CATEGORIES"
+categories = pd.read_sql_query(query,connection)
+result5 = pd.merge(result4, categories, on='category', how='inner')
+del categories
+del result4
+result5 = result5.drop('category', axis=1)
+print("Quinta etapa Categorias")
+
 query = "SELECT yearweek, store_code, item, sell_price FROM item_prices"
 prices = pd.read_sql_query(query,connection)
-result5 = pd.merge(result4,prices, left_on=['yearweek','store_code','item'], right_on=['yearweek','store_code','item'], how='inner')
+result6 = pd.merge(result5,prices, left_on=['yearweek','store_code','item'], right_on=['yearweek','store_code','item'], how='inner')
 del prices
-del result4
-col_to_drop = ['item','yearweek','category','store_code']
-result5 = result5.drop(col_to_drop, axis=1)
+del result5
+col_to_drop = ['item','yearweek','store_code']
+result6 = result6.drop(col_to_drop, axis=1)
 #cálculos finales
-result5 = result5.reset_index(drop=False)
-result5['total'] = result5['sales']*result5['sell_price']
-result5 = result5.rename(columns={'index':'id_sale'})
+result6 = result6.reset_index(drop=False)
+result6['total'] = result6['sales']*result6['sell_price']
+result6 = result6.rename(columns={'index':'id_sale'})
 print("Ultima etapa precios")
 
-result5.to_sql(name='FACT_SALES', con=connection, if_exists='replace', index=False)
+result6.to_sql(name='FACT_SALES', con=connection, if_exists='replace', index=False)
 connection.commit()
-del result5
+del result6
 
 connection.close()
 print('Desconexión')
