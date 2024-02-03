@@ -1,8 +1,8 @@
 #conexión base de datos SQL Lite
 import sqlite3
 
-ruta_db = "C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/dsmarket.db"
-ruta_csv = "C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/item_prices.csv"
+ruta_db = "C:/Users/rsalcedo/OneDrive - Generalitat de Catalunya/projects_ds/dsmarket/dsmarket1/data/dsmarket.db"
+ruta_csv = "C:/Users/rsalcedo/OneDrive - Generalitat de Catalunya/projects_ds/dsmarket/dsmarket1/data/item_prices.csv"
 
 try:
   connection = sqlite3.connect(ruta_db)

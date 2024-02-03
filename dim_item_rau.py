@@ -6,7 +6,7 @@ def substring(cadena, inicio, fin):
 def item_short(row):
     return substring(row["item"], 0, 4)+ substring(row["item"], len(row["item"]) - 6, len(row["item"]))
 
-ruta_db = "C:/Users/rsalcedo/OneDrive/Documentos/projects_ds/dsmarket/dsmarket1/data/dsmarket.db"
+ruta_db = "C:/Users/rsalcedo/OneDrive - Generalitat de Catalunya/projects_ds/dsmarket/dsmarket1/data/dsmarket.db"
 
 try:
     connection = sqlite3.connect(ruta_db)
