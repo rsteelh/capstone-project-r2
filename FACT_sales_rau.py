@@ -20,11 +20,11 @@ print("Primera etapa productos")
 
 query = "SELECT d, date, yearweek FROM daily_calendar"
 fechas = pd.read_sql_query(query,connection)
-fechas['id_date'] = fechas['date']
+#fechas['id_date'] = fechas['date']
 result2 = pd.merge(result, fechas, on='d', how='inner')
 del fechas
 del result
-col_to_drop = ['d','date']
+col_to_drop = ['date']
 result2 = result2.drop(col_to_drop, axis=1)
 print("Segunda etapa fechas")
 
@@ -60,8 +60,8 @@ col_to_drop = ['item','yearweek','store_code']
 result6 = result6.drop(col_to_drop, axis=1)
 #cálculos finales
 result6 = result6.reset_index(drop=False)
-result6['total'] = result6['sales']*result6['sell_price']
-result6 = result6.rename(columns={'index':'id_sale'})
+#result6['total'] = result6['sales']*result6['sell_price']
+#result6 = result6.rename(columns={'index':'id_sale'})
 print("Ultima etapa precios")
 
 result6.to_sql(name='FACT_SALES', con=connection, if_exists='replace', index=False)

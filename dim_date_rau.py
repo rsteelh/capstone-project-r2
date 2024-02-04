@@ -14,7 +14,7 @@ date = pd.read_sql_query(query,connection)
 date['id_date'] = pd.to_datetime(date['date'])
 date['year'] = (date['id_date'].dt.strftime('%Y'))
 date = date.drop('date', axis=1)
-date = date.drop('d', axis=1)
+#date = date.drop('d', axis=1)
 
 date.to_sql(name='DIM_DATE', con=connection, if_exists='replace', index=False)
 connection.commit()
