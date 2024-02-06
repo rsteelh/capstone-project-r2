@@ -19,11 +19,17 @@ ventas = pd.read_csv(ruta_csv)
 ventas_con_ceros=ventas.melt(id_vars=['id', 'item', 'category', 'department','store', 'store_code', 'region'], var_name='d',value_name='sales')
 del ventas
 
+print(ventas_con_ceros["sales"].sum())
+len(ventas_con_ceros)
 
 #Exploración y limpieza
 #borrado de ventas con valor 0
 indices_eliminar=ventas_con_ceros[ventas_con_ceros['sales'] == 0].index
+
+total = len(ventas_con_ceros)-len(indices_eliminar)
 ventas = ventas_con_ceros.drop(indices_eliminar)
+print(len(ventas))
+
 del ventas_con_ceros
 
 #miramos duplicados
@@ -37,6 +43,8 @@ store_code = ventas['store_code'].isnull().any()
 if item == True | store_code == True:
   print("Tratar nulos")
 
+
+print(len(ventas))
 #volcamos dataframe en la base de datos
 ventas.reset_index(drop=True, inplace=True)
 ventas.to_sql(name='item_sales', con=connection, if_exists='replace', index=False)
