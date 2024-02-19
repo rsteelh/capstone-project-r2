@@ -17,19 +17,16 @@ ventas = pd.read_csv(ruta_csv)
 
 #normalización dataframe
 ventas_con_ceros=ventas.melt(id_vars=['id', 'item', 'category', 'department','store', 'store_code', 'region'], var_name='d',value_name='sales')
-del ventas
 
 print(ventas_con_ceros["sales"].sum())
-len(ventas_con_ceros)
+len(ventas)
 
 #Exploración y limpieza
 #borrado de ventas con valor 0
 indices_eliminar=ventas_con_ceros[ventas_con_ceros['sales'] == 0].index
-
 total = len(ventas_con_ceros)-len(indices_eliminar)
 ventas = ventas_con_ceros.drop(indices_eliminar)
 print(len(ventas))
-
 del ventas_con_ceros
 
 #miramos duplicados
