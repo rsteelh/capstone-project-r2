@@ -161,5 +161,8 @@ cython_debug/
 
 data/
 antiguos/
+otros/
+Finales/
+catboost_info/
 
 
